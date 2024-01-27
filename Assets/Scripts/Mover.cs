@@ -5,14 +5,13 @@ using UnityEngine.AI;
 
 public class Mover : MonoBehaviour
 {
-  [SerializeField]
-  GameObject target;
-
   private NavMeshAgent navMeshAgent;
+  private Animator animator;
 
   void Start()
   {
     navMeshAgent = GetComponent<NavMeshAgent>();
+    animator = GetComponent<Animator>();
   }
 
   void Update()
@@ -21,6 +20,8 @@ public class Mover : MonoBehaviour
     {
       MoveToCursor();
     }
+
+    UpdateAnimator();
   }
 
   private void MoveToCursor()
@@ -32,5 +33,14 @@ public class Mover : MonoBehaviour
     {
       navMeshAgent.destination = hit.point;
     }
+  }
+
+  private void UpdateAnimator()
+  {
+    Vector3 velocity = navMeshAgent.velocity;
+    Vector3 localVelocity = transform.InverseTransformDirection(velocity);
+    float speed = localVelocity.z;
+
+    animator.SetFloat("speed", speed);
   }
 }
